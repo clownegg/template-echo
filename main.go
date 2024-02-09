@@ -3,13 +3,14 @@ package main
 import (
 	"github.com/labstack/echo"
 
-	"template_app/src/config"
-	"template_app/src/route"
+	"template_app/middlewares"
+	"template_app/routes"
 )
 
 func main() {
 	e := echo.New()
-	config.Init(e)
-	route.Init(e)
+	middlewares.Init(e)
+	routes.Init(e)
+
 	e.Start(":8080")
 }

@@ -1,7 +1,7 @@
-package route
+package routes
 
 import (
-	"template_app/src/controller"
+	"template_app/handlers"
 
 	"github.com/labstack/echo"
 )
@@ -9,6 +9,6 @@ import (
 func Init(e *echo.Echo) {
 	todoRoutes := e.Group("/todos")
 	{
-		todoRoutes.GET("", controller.TodoFindAll)
+		todoRoutes.GET("", handlers.TodoFindAll)
 	}
 }
