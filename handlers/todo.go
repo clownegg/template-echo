@@ -2,11 +2,18 @@ package handlers
 
 import (
 	"net/http"
+	"template_app/factory"
 
 	"github.com/labstack/echo"
 )
 
-// TodoFindAll は全件取得を行う
 func TodoFindAll(c echo.Context) error {
-	return c.String(http.StatusOK, "ok")
+	service := factory.NewTodoFactory(c).TodoService()
+	todos := service.FindAll()
+
+	return c.JSON(http.StatusOK, todos)
+}
+
+func TodoFindById(c echo.Context) error {
+	return c.JSON(200, "test")
 }

@@ -12,5 +12,5 @@ func main() {
 	middlewares.Init(e)
 	routes.Init(e)
 
-	e.Start(":8080")
+	e.Logger.Fatal(e.Start(":8080"))
 }

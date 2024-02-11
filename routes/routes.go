@@ -7,8 +7,10 @@ import (
 )
 
 func Init(e *echo.Echo) {
-	todoRoutes := e.Group("/todos")
+	v1 := e.Group("/api/v1")
+
 	{
-		todoRoutes.GET("", handlers.TodoFindAll)
+		v1.GET("/todos", handlers.TodoFindAll)
+		v1.GET("/todos/:id", handlers.TodoFindById)
 	}
 }
