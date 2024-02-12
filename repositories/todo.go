@@ -1,14 +1,15 @@
 package repositories
 
 import (
+	"template_app/dao"
 	"template_app/models"
 
 	"gorm.io/gorm"
 )
 
 type TodoRepository interface {
-	FindAll() []models.Todo
-	FindByID() error
+	FindAll(cond models.TodosCond) ([]models.Todo, int64)
+	FindById(id int, cond models.TodoCond) models.Todo
 }
 
 type todoRepository struct {
@@ -21,15 +22,12 @@ func NewTodoRepository(db *gorm.DB) TodoRepository {
 	}
 }
 
-func (r *todoRepository) FindAll() []models.Todo {
-	session := r.db.Table("t_todos")
-	todos := []models.Todo{}
-
-	session.Find(&todos)
-
-	return todos
+func (r *todoRepository) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
+	todos, count := dao.SearchTodo(r.db, cond)
+	return todos, count
 }
 
-func (r *todoRepository) FindByID() error {
-	return nil
+func (r *todoRepository) FindById(id int, cond models.TodoCond) models.Todo {
+	todo := dao.FindTodoById(r.db, id, cond)
+	return todo
 }
