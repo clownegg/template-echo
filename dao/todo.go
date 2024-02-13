@@ -49,3 +49,14 @@ func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) models.Todo {
 
 	return todo
 }
+
+func CreateTodo(db *gorm.DB, postData models.TodoPost) error {
+	session := db.Table("t_todos")
+	result := session.Create(&postData)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}

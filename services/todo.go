@@ -8,6 +8,7 @@ import (
 type TodoService interface {
 	FindAll(cond models.TodosCond) ([]models.Todo, int64)
 	FindById(id int, cond models.TodoCond) models.Todo
+	Create(postData models.TodoPost) error
 }
 
 type todoService struct {
@@ -26,4 +27,8 @@ func (s *todoService) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
 
 func (s *todoService) FindById(id int, cond models.TodoCond) models.Todo {
 	return s.todoRepository.FindById(id, cond)
+}
+
+func (s *todoService) Create(postData models.TodoPost) error {
+	return s.todoRepository.Create(postData)
 }

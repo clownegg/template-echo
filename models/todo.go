@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Todo struct {
-	ID        uint      `gorm:"primary_key, json:id"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	Title     string    `json:"title"`
 	Done      *bool     `json:"done"`
 	IsDeleted *bool     `json:"is_deleted"`
@@ -22,4 +22,9 @@ type TodosCond struct {
 
 type TodoCond struct {
 	IsDeleted int `query:"is_deleted"`
+}
+
+type TodoPost struct {
+	Title string `form:"title"`
+	Done  *bool  `form:"done" gorm:"default:false"`
 }

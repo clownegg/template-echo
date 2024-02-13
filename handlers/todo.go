@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func TodoFindAll(c echo.Context) error {
+func FindTodoAll(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
 	cond := models.TodosCond{
@@ -28,7 +28,7 @@ func TodoFindAll(c echo.Context) error {
 	return c.JSON(http.StatusOK, todos)
 }
 
-func TodoFindById(c echo.Context) error {
+func FindTodoById(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
 	cond := models.TodoCond{
@@ -45,4 +45,21 @@ func TodoFindById(c echo.Context) error {
 	}
 	todo := service.FindById(id, cond)
 	return c.JSON(http.StatusOK, todo)
+}
+
+func CreateTodo(c echo.Context) error {
+	service := factory.NewTodoFactory(c).TodoService()
+
+	postData := models.TodoPost{}
+	err := c.Bind(&postData)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	err = service.Create(postData)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "OK")
 }

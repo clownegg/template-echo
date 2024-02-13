@@ -10,6 +10,7 @@ import (
 type TodoRepository interface {
 	FindAll(cond models.TodosCond) ([]models.Todo, int64)
 	FindById(id int, cond models.TodoCond) models.Todo
+	Create(postData models.TodoPost) error
 }
 
 type todoRepository struct {
@@ -30,4 +31,8 @@ func (r *todoRepository) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
 func (r *todoRepository) FindById(id int, cond models.TodoCond) models.Todo {
 	todo := dao.FindTodoById(r.db, id, cond)
 	return todo
+}
+
+func (r *todoRepository) Create(postData models.TodoPost) error {
+	return dao.CreateTodo(r.db, postData)
 }
