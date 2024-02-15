@@ -1,0 +1,77 @@
+openapi: 3.1.0
+info: 
+  title: Template API
+  version: "1.0"
+
+servers: 
+  - url: http://localhost:{port}/{basePath}
+    description: Local Server
+    variables:
+      port:
+        default: '8080'
+      basePath:
+        default: api/v1
+
+paths: 
+  /todos:
+    get:
+      summary: Returns a list of Todo
+      operationId: FindAllTodo
+      tags: 
+        -  todo
+      responses: 
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: "#/components/schemas/Todo"
+  /todos/{id}:
+    get:
+      summary: Returns a one of Todo
+      operationId: FindTodoById
+      tags:
+        - todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Todo ID
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Todo"
+      
+components: 
+  schemas: 
+    Todo:
+      type: object
+      properties: 
+        id: 
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "UIデザインを作成する"
+        done:
+          type: boolean
+          example: false
+        is_deleted:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date
+          example: "2024-02-10T16:31:56+09:00"
+        updated_at:
+          type: string
+          format: date
+          example: "2024-02-10T16:31:56+09:00"

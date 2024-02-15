@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"template_app/factory"
 	"template_app/models"
+	"template_app/utils"
 
 	"github.com/labstack/echo"
 )
@@ -43,8 +44,13 @@ func FindTodoById(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "Invalid Path Parameter")
 	}
-	todo := service.FindById(id, cond)
-	return c.JSON(http.StatusOK, todo)
+	todo, err := service.FindById(id, cond)
+	if err != nil {
+		e := utils.ErrorWrap(err)
+		return c.JSON(e.Code, e.Msg.Error())
+	}
+
+	return c.JSON(http.StatusOK, &todo)
 }
 
 func CreateTodo(c echo.Context) error {

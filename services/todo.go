@@ -7,7 +7,7 @@ import (
 
 type TodoService interface {
 	FindAll(cond models.TodosCond) ([]models.Todo, int64)
-	FindById(id int, cond models.TodoCond) models.Todo
+	FindById(id int, cond models.TodoCond) (*models.Todo, error)
 	Create(postData models.TodoPost) error
 }
 
@@ -25,7 +25,7 @@ func (s *todoService) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
 	return s.todoRepository.FindAll(cond)
 }
 
-func (s *todoService) FindById(id int, cond models.TodoCond) models.Todo {
+func (s *todoService) FindById(id int, cond models.TodoCond) (*models.Todo, error) {
 	return s.todoRepository.FindById(id, cond)
 }
 

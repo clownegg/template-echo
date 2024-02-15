@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"template_app/models"
 
 	"gorm.io/gorm"
@@ -37,7 +38,7 @@ func SearchTodo(db *gorm.DB, cond models.TodosCond) ([]models.Todo, int64) {
 	return todos, count
 }
 
-func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) models.Todo {
+func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) (*models.Todo, error) {
 	session := db.Table("t_todos")
 	todo := models.Todo{}
 
@@ -45,9 +46,15 @@ func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) models.Todo {
 		session.Where("is_deleted = ?", true)
 	}
 
-	session.Find(&todo).Where("id = ?", id)
+	session.Where("id = ?", id)
+	result := session.Take(&todo)
 
-	return todo
+	if result.Error != nil {
+		fmt.Println("FindTodoByID SQL ERROR:", result.Error)
+		return nil, result.Error
+	}
+
+	return &todo, nil
 }
 
 func CreateTodo(db *gorm.DB, postData models.TodoPost) error {
@@ -55,6 +62,7 @@ func CreateTodo(db *gorm.DB, postData models.TodoPost) error {
 	result := session.Create(&postData)
 
 	if result.Error != nil {
+		fmt.Println("CreateTodo SQL ERROR:", result.Error)
 		return result.Error
 	}
 

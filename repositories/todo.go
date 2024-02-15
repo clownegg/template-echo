@@ -9,7 +9,7 @@ import (
 
 type TodoRepository interface {
 	FindAll(cond models.TodosCond) ([]models.Todo, int64)
-	FindById(id int, cond models.TodoCond) models.Todo
+	FindById(id int, cond models.TodoCond) (*models.Todo, error)
 	Create(postData models.TodoPost) error
 }
 
@@ -28,9 +28,8 @@ func (r *todoRepository) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
 	return todos, count
 }
 
-func (r *todoRepository) FindById(id int, cond models.TodoCond) models.Todo {
-	todo := dao.FindTodoById(r.db, id, cond)
-	return todo
+func (r *todoRepository) FindById(id int, cond models.TodoCond) (*models.Todo, error) {
+	return dao.FindTodoById(r.db, id, cond)
 }
 
 func (r *todoRepository) Create(postData models.TodoPost) error {
