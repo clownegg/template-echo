@@ -7,16 +7,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func SearchTodo(db *gorm.DB, cond models.TodosCond) ([]models.Todo, int64) {
+func SearchTodo(db *gorm.DB, cond models.TodoSearchParam) ([]models.Todo, int64) {
 	session := db.Table("t_todos")
 	todos := []models.Todo{}
 	var count int64
 
-	if cond.Done == 1 {
+	fmt.Println(cond.IsDeleted)
+
+	if cond.Done {
 		session.Where("done = ?", true)
 	}
 
-	if cond.IsDeleted == 1 {
+	if cond.IsDeleted {
 		session.Where("is_deleted = ?", true)
 	}
 
@@ -38,11 +40,11 @@ func SearchTodo(db *gorm.DB, cond models.TodosCond) ([]models.Todo, int64) {
 	return todos, count
 }
 
-func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) (*models.Todo, error) {
+func FindTodoById(db *gorm.DB, id int, cond models.TodoParam) (*models.Todo, error) {
 	session := db.Table("t_todos")
 	todo := models.Todo{}
 
-	if cond.IsDeleted == 1 {
+	if cond.IsDeleted {
 		session.Where("is_deleted = ?", true)
 	}
 
@@ -57,12 +59,23 @@ func FindTodoById(db *gorm.DB, id int, cond models.TodoCond) (*models.Todo, erro
 	return &todo, nil
 }
 
-func CreateTodo(db *gorm.DB, postData models.TodoPost) error {
+func CreateTodo(db *gorm.DB, postBody models.TodoBody) error {
 	session := db.Table("t_todos")
-	result := session.Create(&postData)
+	result := session.Create(&postBody)
 
 	if result.Error != nil {
 		fmt.Println("CreateTodo SQL ERROR:", result.Error)
+		return result.Error
+	}
+
+	return nil
+}
+
+func UpdateTodo(db *gorm.DB, id int, putBody models.TodoBody) error {
+	session := db.Table("t_todos")
+
+	result := session.Where("id = ?", id).Updates(&putBody)
+	if result.Error != nil {
 		return result.Error
 	}
 

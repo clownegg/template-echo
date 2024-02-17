@@ -8,9 +8,10 @@ import (
 )
 
 type TodoRepository interface {
-	FindAll(cond models.TodosCond) ([]models.Todo, int64)
-	FindById(id int, cond models.TodoCond) (*models.Todo, error)
-	Create(postData models.TodoPost) error
+	FindAll(cond models.TodoSearchParam) ([]models.Todo, int64)
+	FindById(id int, cond models.TodoParam) (*models.Todo, error)
+	Create(postBody models.TodoBody) error
+	Update(id int, putBody models.TodoBody) error
 }
 
 type todoRepository struct {
@@ -23,15 +24,19 @@ func NewTodoRepository(db *gorm.DB) TodoRepository {
 	}
 }
 
-func (r *todoRepository) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
+func (r *todoRepository) FindAll(cond models.TodoSearchParam) ([]models.Todo, int64) {
 	todos, count := dao.SearchTodo(r.db, cond)
 	return todos, count
 }
 
-func (r *todoRepository) FindById(id int, cond models.TodoCond) (*models.Todo, error) {
+func (r *todoRepository) FindById(id int, cond models.TodoParam) (*models.Todo, error) {
 	return dao.FindTodoById(r.db, id, cond)
 }
 
-func (r *todoRepository) Create(postData models.TodoPost) error {
-	return dao.CreateTodo(r.db, postData)
+func (r *todoRepository) Create(postBody models.TodoBody) error {
+	return dao.CreateTodo(r.db, postBody)
+}
+
+func (r *todoRepository) Update(id int, putBody models.TodoBody) error {
+	return dao.UpdateTodo(r.db, id, putBody)
 }

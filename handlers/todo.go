@@ -14,10 +14,9 @@ import (
 func FindTodoAll(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
-	cond := models.TodosCond{
-		IsDeleted: 0,
-		Offset:    0,
-		Limit:     30,
+	cond := models.TodoSearchParam{
+		Offset: 0,
+		Limit:  30,
 	}
 	err := c.Bind(&cond)
 	if err != nil {
@@ -32,9 +31,7 @@ func FindTodoAll(c echo.Context) error {
 func FindTodoById(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
-	cond := models.TodoCond{
-		IsDeleted: 0,
-	}
+	cond := models.TodoParam{}
 	err := c.Bind(&cond)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -56,13 +53,35 @@ func FindTodoById(c echo.Context) error {
 func CreateTodo(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
-	postData := models.TodoPost{}
-	err := c.Bind(&postData)
+	postBody := models.TodoBody{}
+	err := c.Bind(&postBody)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	err = service.Create(postData)
+	err = service.Create(postBody)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "OK")
+}
+
+func UpdateTodo(c echo.Context) error {
+	service := factory.NewTodoFactory(c).TodoService()
+
+	putBody := models.TodoBody{}
+	err := c.Bind(&putBody)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Invalid Path Parameter")
+	}
+
+	err = service.Update(id, putBody)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}

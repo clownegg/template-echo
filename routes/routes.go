@@ -13,5 +13,6 @@ func Init(e *echo.Echo) {
 		v1.GET("/todos", handlers.FindTodoAll)
 		v1.GET("/todos/:id", handlers.FindTodoById)
 		v1.POST("/todos", handlers.CreateTodo)
+		v1.PUT("/todos/:id", handlers.UpdateTodo)
 	}
 }

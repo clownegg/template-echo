@@ -11,20 +11,20 @@ type Todo struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type TodosCond struct {
+type TodoSearchParam struct {
 	Title     string `query:"title"`
-	Done      int    `query:"done"`
-	IsDeleted int    `query:"is_deleted"`
+	Done      bool   `query:"done"`
+	IsDeleted bool   `query:"is_deleted"`
 	Sort      string `query:"sort"`
 	Limit     int    `query:"limit"`
 	Offset    int    `query:"offset"`
 }
 
-type TodoCond struct {
-	IsDeleted int `query:"is_deleted"`
+type TodoParam struct {
+	IsDeleted bool `query:"is_deleted"`
 }
 
-type TodoPost struct {
+type TodoBody struct {
 	Title string `form:"title"`
 	Done  *bool  `form:"done" gorm:"default:false"`
 }

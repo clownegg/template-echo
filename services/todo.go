@@ -6,9 +6,10 @@ import (
 )
 
 type TodoService interface {
-	FindAll(cond models.TodosCond) ([]models.Todo, int64)
-	FindById(id int, cond models.TodoCond) (*models.Todo, error)
-	Create(postData models.TodoPost) error
+	FindAll(cond models.TodoSearchParam) ([]models.Todo, int64)
+	FindById(id int, cond models.TodoParam) (*models.Todo, error)
+	Create(postBody models.TodoBody) error
+	Update(id int, putBody models.TodoBody) error
 }
 
 type todoService struct {
@@ -21,14 +22,18 @@ func NewTodoService(todoRepository repositories.TodoRepository) TodoService {
 	}
 }
 
-func (s *todoService) FindAll(cond models.TodosCond) ([]models.Todo, int64) {
+func (s *todoService) FindAll(cond models.TodoSearchParam) ([]models.Todo, int64) {
 	return s.todoRepository.FindAll(cond)
 }
 
-func (s *todoService) FindById(id int, cond models.TodoCond) (*models.Todo, error) {
+func (s *todoService) FindById(id int, cond models.TodoParam) (*models.Todo, error) {
 	return s.todoRepository.FindById(id, cond)
 }
 
-func (s *todoService) Create(postData models.TodoPost) error {
-	return s.todoRepository.Create(postData)
+func (s *todoService) Create(postBody models.TodoBody) error {
+	return s.todoRepository.Create(postBody)
+}
+
+func (s *todoService) Update(id int, putBody models.TodoBody) error {
+	return s.todoRepository.Update(id, putBody)
 }

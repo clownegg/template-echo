@@ -15,10 +15,45 @@ servers:
 paths: 
   /todos:
     get:
-      summary: Returns a list of Todo
+      summary: List Todo
+      description: "Todo一覧を返却する"
       operationId: FindAllTodo
       tags: 
-        -  todo
+        - Todo
+      parameters:
+        - name: title
+          in: query
+          schema: 
+            type: string
+            example: "UI"
+            description: "部分一致で検索"
+        - name: done
+          in: query
+          schema:
+            type: boolean
+            example: false
+        - name: is_deleted
+          in: query
+          schema:
+            type: boolean
+            example: false
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: "created_at"
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 50
+            default: 30
+        - name: offset
+          in: query
+          schema:
+            type: number
+            example: 10
+            default: 0
       responses: 
         "200":
           description: ""
@@ -28,12 +63,33 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Todo"
+    post:
+      summary: Create Todo
+      description: "Todoを作成する"
+      operationId: CreateTodo
+      tags:
+        - Todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoPostBody"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: OK
+
   /todos/{id}:
     get:
-      summary: Returns a one of Todo
+      summary: One of Todo
+      description: "IDに一致するTodoを返却する"
       operationId: FindTodoById
       tags:
-        - todo
+        - Todo
       parameters:
         - name: id
           in: path
@@ -49,8 +105,16 @@ paths:
               schema:
                 type: object
                 $ref: "#/components/schemas/Todo"
+        "403":
+          description: "Resource Not Found"
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Record Not Found"
+
       
-components: 
+components:
   schemas: 
     Todo:
       type: object
@@ -75,3 +139,12 @@ components:
           type: string
           format: date
           example: "2024-02-10T16:31:56+09:00"
+    TodoPostBody:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "テストコードの作成"
+        done:
+          type: boolean
+          example: false
