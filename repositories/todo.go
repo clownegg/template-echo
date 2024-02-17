@@ -12,6 +12,7 @@ type TodoRepository interface {
 	FindById(id int, cond models.TodoParam) (*models.Todo, error)
 	Create(postBody models.TodoBody) error
 	Update(id int, putBody models.TodoBody) error
+	Delete(id int) error
 }
 
 type todoRepository struct {
@@ -39,4 +40,8 @@ func (r *todoRepository) Create(postBody models.TodoBody) error {
 
 func (r *todoRepository) Update(id int, putBody models.TodoBody) error {
 	return dao.UpdateTodo(r.db, id, putBody)
+}
+
+func (r *todoRepository) Delete(id int) error {
+	return dao.DeleteTodo(r.db, id)
 }

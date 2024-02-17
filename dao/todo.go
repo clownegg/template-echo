@@ -81,3 +81,14 @@ func UpdateTodo(db *gorm.DB, id int, putBody models.TodoBody) error {
 
 	return nil
 }
+
+func DeleteTodo(db *gorm.DB, id int) error {
+	session := db.Table("t_todos")
+
+	result := session.Where("id = ?", id).Update("is_deleted", true)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}

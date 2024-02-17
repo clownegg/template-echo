@@ -88,3 +88,19 @@ func UpdateTodo(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, "OK")
 }
+
+func DeleteTodo(c echo.Context) error {
+	service := factory.NewTodoFactory(c).TodoService()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Invalid Path Parameter")
+	}
+
+	err = service.Delete(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "OK")
+}

@@ -10,6 +10,7 @@ type TodoService interface {
 	FindById(id int, cond models.TodoParam) (*models.Todo, error)
 	Create(postBody models.TodoBody) error
 	Update(id int, putBody models.TodoBody) error
+	Delete(id int) error
 }
 
 type todoService struct {
@@ -36,4 +37,8 @@ func (s *todoService) Create(postBody models.TodoBody) error {
 
 func (s *todoService) Update(id int, putBody models.TodoBody) error {
 	return s.todoRepository.Update(id, putBody)
+}
+
+func (s *todoService) Delete(id int) error {
+	return s.todoRepository.Delete(id)
 }
