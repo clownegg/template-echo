@@ -12,14 +12,8 @@ func SearchTodo(db *gorm.DB, cond models.TodoSearchParam) ([]models.Todo, int64)
 	todos := []models.Todo{}
 	var count int64
 
-	fmt.Println(cond.IsDeleted)
-
 	if cond.Done {
 		session.Where("done = ?", true)
-	}
-
-	if cond.IsDeleted {
-		session.Where("is_deleted = ?", true)
 	}
 
 	if cond.Title != "" {
@@ -35,7 +29,7 @@ func SearchTodo(db *gorm.DB, cond models.TodoSearchParam) ([]models.Todo, int64)
 		session.Offset(cond.Offset)
 	}
 
-	session.Find(&todos).Count(&count)
+	session.Where("is_deleted = ?", cond.IsDeleted).Find(&todos).Count(&count)
 
 	return todos, count
 }
@@ -44,11 +38,7 @@ func FindTodoById(db *gorm.DB, id int, cond models.TodoParam) (*models.Todo, err
 	session := db.Table("t_todos")
 	todo := models.Todo{}
 
-	if cond.IsDeleted {
-		session.Where("is_deleted = ?", true)
-	}
-
-	session.Where("id = ?", id)
+	session.Where("id = ? and is_deleted = ?", id, true)
 	result := session.Take(&todo)
 
 	if result.Error != nil {
