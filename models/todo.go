@@ -12,12 +12,13 @@ type Todo struct {
 }
 
 type TodoSearchParam struct {
-	Title     string `query:"title"`
-	Done      bool   `query:"done"`
-	IsDeleted bool   `query:"is_deleted"`
-	Sort      string `query:"sort"`
-	Limit     int    `query:"limit"`
-	Offset    int    `query:"offset"`
+	Title     string    `query:"title"`
+	Done      bool      `query:"done"`
+	IsDeleted bool      `query:"is_deleted"`
+	Sort      string    `query:"sort"`
+	Order     OrderEnum `query:"order"`
+	Limit     int       `query:"limit"`
+	Offset    int       `query:"offset"`
 }
 
 type TodoParam struct {
@@ -27,4 +28,14 @@ type TodoParam struct {
 type TodoBody struct {
 	Title string `form:"title"`
 	Done  *bool  `form:"done" gorm:"default:false"`
+}
+
+func NewTodoSearchParameter() TodoSearchParam {
+	return TodoSearchParam{
+		IsDeleted: false,
+		Sort:      "id",
+		Order:     OrderDesc,
+		Offset:    0,
+		Limit:     30,
+	}
 }

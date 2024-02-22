@@ -28,6 +28,8 @@ func SearchTodo(db *gorm.DB, cond models.TodoSearchParam) ([]models.Todo, int64)
 	if cond.Offset != 0 {
 		session.Offset(cond.Offset)
 	}
+	order := fmt.Sprintf("%s %s", cond.Sort, cond.Order)
+	session.Order(order)
 
 	session.Where("is_deleted = ?", cond.IsDeleted).Find(&todos).Count(&count)
 

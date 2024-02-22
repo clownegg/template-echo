@@ -14,11 +14,7 @@ import (
 func FindTodoAll(c echo.Context) error {
 	service := factory.NewTodoFactory(c).TodoService()
 
-	cond := models.TodoSearchParam{
-		IsDeleted: false,
-		Offset:    0,
-		Limit:     30,
-	}
+	cond := models.NewTodoSearchParameter()
 	err := c.Bind(&cond)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
